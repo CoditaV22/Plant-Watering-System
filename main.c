@@ -5,9 +5,8 @@
 #include <string.h>
 #include <sleep.h>
 
+#define Relay_PIN 0
 
-        //TODO
-        //1. Automatic watering
         
 volatile int count = 0; 
 
@@ -46,6 +45,10 @@ int adc_value0 , adc_value1;
 float moisture;
 float water;
 
+DDRC = 0x01;
+//PORTC=(0<<PORTC7) | (0<<PORTC6) | (0<<PORTC5) | (0<<PORTC4) | (0<<PORTC3) | (0<<PORTC2) | (0<<PORTC1) | (1<<PORTC0);
+
+
 //Timer 2 initialization
 ASSR=(0<<EXCLK) | (0<<AS2);
 TCCR2A=(0<<COM2A1) | (0<<COM2A0) | (0<<COM2B1) | (0<<COM2B0) | (0<<WGM21) | (0<<WGM20);
@@ -66,8 +69,9 @@ ADC_init();
 
 
 while (1)
-      {  
-        if(count >= 6000)  // 1 min has passed 
+      { 
+        
+        if(count >= 500)  // 1 min has passed 
         { 
         
         sleep_disable();  
@@ -96,7 +100,7 @@ while (1)
         
         /* Reading water level */ 
         adc_value1 = ADC_Read(1); // read ADC value 
-        water = (adc_value1*100.00)/1023.00;;        
+        water = (adc_value1*100.00)/1023.00;        
         lcd_gotoxy(0,1); // 2nd row
         lcd_puts("Water: ");
         
@@ -123,8 +127,21 @@ while (1)
             lcd_puts("FILL NOW!");
         }
         
+        delay_ms(5000);
         
-        delay_ms(2500); 
+        
+        if(moisture < 30)
+        {
+            PORTC = (1 << Relay_PIN); 
+            delay_ms(500);
+            PORTC = (0 << Relay_PIN);
+        }
+        else
+        {
+            PORTC = (0 << Relay_PIN);
+        }
+        
+        
         lcd_clear();
         count = 0; //reset and prepare for another counter
         }
