@@ -15,7 +15,7 @@ Using the ATmega164 MCU I decided to implement a self watering system that detec
 The MCU reads the ADC values of the sensors and sends the signal to the relay module. After, it goes into power-saving mode for 1 minute, when it is woken up by a counter which increments at each 1ms with the use of Timer2 Overflow ISR.
 
 
-**DEMONSTRATION:**https://www.youtube.com/shorts/HQkldGFYNVA
+**DEMONSTRATION:** https://www.youtube.com/shorts/HQkldGFYNVA
 
 
 
